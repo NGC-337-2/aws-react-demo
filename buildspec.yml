@@ -1,0 +1,31 @@
+version: 0.2
+
+# Phases run in order: install → pre_build → build → post_build
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18  # Use a recent Node.js version
+    commands:
+      - echo "Installing dependencies..."
+      - npm ci  # Faster, cleaner install than npm install
+
+  pre_build:
+    commands:
+      - echo "Running tests..."
+      - npm test -- --watchAll=false  # Run tests once (not in watch mode)
+
+  build:
+    commands:
+      - echo "Building production bundle..."
+      - npm run build  # Creates the 'dist/' folder
+
+  post_build:
+    commands:
+      - echo "Build completed on $(date)"
+
+# Tell CodeBuild which files to upload to S3
+artifacts:
+  files:
+    - '**/*'  # Include all files from the output directory
+  base-directory: 'dist'  # ← Critical: Point to Vite's output folder
+  discard-paths: no
