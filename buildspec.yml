@@ -1,18 +1,17 @@
 version: 0.2
 
-# Phases run in order: install → pre_build → build → post_build
 phases:
   install:
     runtime-versions:
-      nodejs: 18  # Use a recent Node.js version
+      nodejs: 20  # UPDATED: Vite 8+ requires Node 20 or higher
     commands:
       - echo "Installing dependencies..."
-      - npm ci  # Faster, cleaner install than npm install
+      - npm ci  # Installs exact versions from package-lock.json
 
   pre_build:
     commands:
       - echo "Running tests..."
-      - npm test -- --watchAll=false  # Run tests once (not in watch mode)
+      - npm test  # Runs the test script defined in package.json
 
   build:
     commands:
@@ -23,9 +22,8 @@ phases:
     commands:
       - echo "Build completed on $(date)"
 
-# Tell CodeBuild which files to upload to S3
 artifacts:
   files:
-    - '**/*'  # Include all files from the output directory
-  base-directory: 'dist'  # ← Critical: Point to Vite's output folder
+    - '**/*'
+  base-directory: 'dist'  # Uploads contents of the dist folder to S3 root
   discard-paths: no
