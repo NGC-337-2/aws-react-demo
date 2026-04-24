@@ -5,8 +5,10 @@ import { describe, it, expect } from 'vitest';
 describe('App Component', () => {
   it('renders the welcome message', () => {
     render(<App />);
-    // Adjust this text to match what's in your <h1> in App.jsx
+    
+    // Use a regex or partial text to be safe
     const heading = screen.getByText(/Welcome to My Static Website/i); 
+    
     expect(heading).toBeInTheDocument();
   });
 });
